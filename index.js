@@ -10,11 +10,18 @@ app.get('/', function(req, res){
 res.sendFile(__dirname + '/index.html');
 });
 
+//app.use('/img',express.static(path.join(__dirname, 'public')));
+
+app.use('/images',express.static(path.join(__dirname+ '/images')));
+app.use('/styles',express.static(path.join(__dirname+ '/styles')));
+app.use('/scripts',express.static(path.join(__dirname+ '/scripts')));
+app.use('/libraries',express.static(path.join(__dirname+ '/libraries')));
+app.use('/avatars',express.static(path.join(__dirname+ '/avatars')));
 // Routing
 app.use(express.static(path.join(__dirname, 'public')));
 
 var numUsers = 0;
-
+var users=[];
 
 io.emit('some event', { for: 'everyone' });
 
@@ -25,6 +32,7 @@ io.on('connection', function(socket){
   // when the client emits 'new message', this listens and executes
   socket.on('new message', function (data) {
     // we tell the client to execute 'new message'
+    users.push(socket.username);
     socket.broadcast.emit('new message', {
       username: socket.username,
       message: data
