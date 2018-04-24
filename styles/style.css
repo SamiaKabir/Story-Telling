@@ -115,6 +115,8 @@ ul {
 .chatArea {
   height: 100%;
   padding-bottom: 60px;
+  background-image: url("https://vignette.wikia.nocookie.net/animal-jam-clans-1/images/2/24/Elipagediv.gif/revision/latest?cb=20160411002950");
+  background-color: white;
 }
 
 .messages {
@@ -125,7 +127,7 @@ ul {
 }
 
 .messages li { padding: 5px 10px; }
-.messages li:nth-child(odd) { background: #eee; }
+/*.messages li:nth-child(odd) { background: #eee; }*/
 
 .message.typing .messageBody {
   color: gray;
@@ -135,7 +137,8 @@ ul {
   font-weight: 700;
   overflow: hidden;
   padding-right: 15px;
-  text-align: right;
+  padding-left: 15px;
+  /*text-align: right;*/
 }
 
 /* Input */
@@ -170,8 +173,11 @@ ul {
 /* Modal Content */
 .modal-content {
     /*background-color: #fefefe;*/
-    background-color: #99d6ff;
-    background-image: url("https://www.transparenttextures.com/patterns/45-degree-fabric-dark.png");
+/*    background-color: #99d6ff;
+    background-image: url("https://www.transparenttextures.com/patterns/45-degree-fabric-dark.png");*/
+    
+    background-image: url("https://png.pngtree.com/element_origin_min_pic/16/07/09/175780bd5aaa1ef.jpg"), url("https://www.w3schools.com/cssref/paper.gif");
+    background-color: #cccccc;
     margin: auto;
     padding: 20px;
     border: 1px solid #888;
@@ -201,11 +207,13 @@ ul {
 #header1{
 
     background: #404040;
-    height: 15%;}
+    height: 12%;}
 
 #header2{
-    background: #ffa366;
-    height: 85%;
+    background-image: url("http://p3.storage.canalblog.com/37/45/157598/94723216_o.gif");
+    /*background-color: #cccccc;*/
+    background-color: #e6ffff;
+    height: 88%;
 }
 .button {
     background-color: #4d4d4d /* Green */
@@ -225,7 +233,7 @@ ul {
     background-color:  #4d4d4d; 
     color: white; 
     border: 5px;
-    margin-left: 20%;
+    margin-left: 40%;
 }
 .button1:hover {
     background-color: #262626;

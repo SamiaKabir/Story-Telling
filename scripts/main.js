@@ -106,10 +106,53 @@ $(function() {
       .text(data.message);
 
     var typingClass = data.typing ? 'typing' : '';
-    var $messageDiv = $('<li class="message"/>')
+    
+    var $messageDiv;
+
+    if(data.username!=username){
+    $messageDiv = $('<li class="message"/>')
       .data('username', data.username)
       .addClass(typingClass)
       .append($userAvatarDiv, $messageBodyDiv);
+    }
+
+    else
+    {
+       $messageDiv = $('<li class="message"/>')
+      .data('username', data.username)
+      .addClass(typingClass)
+      .append($messageBodyDiv, $userAvatarDiv);
+
+    }
+
+    addMessageElement($messageDiv, options);
+
+  }
+
+    // Adds the visual type message to the message list
+  function addTypeMessage (data, options) {
+    // Don't fade the message in if there is an 'X was typing'
+    var $typingMessages = getTypingMessages(data);
+    options = options || {};
+    if ($typingMessages.length !== 0) {
+      options.fade = false;
+      $typingMessages.remove();
+    }
+
+    var $usernameDiv = $('<span class="username"/>')
+      .text(data.username)
+      .css('color', getUsernameColor(data.username));
+
+
+
+    var $messageBodyDiv = $('<span class="messageBody">')
+      .text(data.message);
+
+    var typingClass = data.typing ? 'typing' : '';
+    var $messageDiv = $('<li class="message"/>')
+      .data('username', data.username)
+      .addClass(typingClass)
+      .append($usernameDiv, $messageBodyDiv);
 
     addMessageElement($messageDiv, options);
 
@@ -119,7 +162,7 @@ $(function() {
   function addChatTyping (data) {
     data.typing = true;
     data.message = 'is typing';
-    addChatMessage(data);
+    addTypeMessage(data);
   }
 
   // Removes the visual chat typing message
