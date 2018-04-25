@@ -1,11 +1,11 @@
 var characters = ['Bart', 'Tom', 'Popeye', 'Spongebob', 'Jerry', 'Pikachu'];
 var vehicles = ['car', 'bike', 'motorcycle', 'scooter', 'skateboard', 'rollerblades'];
 var food = ['chips', 'cookies and milk', 'lemonade', 'rice and curry'];
-var places = ['his house', 'Spongebob\'s house'];
-
-function getCharacter() {
-    console.log(characters[0]);
-}
+var protagonist = getRandArrayElem(characters);
+var places = ['his house', protagonist + '\'s house', getRandArrayElem(characters) + '\'s house.'];
+var storyChars = [protagonist];
+var points = ['two', 'three'];
+var refChar = protagonist;
 
 function getRandArrayElem(array) {
     return array[Math.floor(Math.random()*array.length)];
@@ -13,11 +13,22 @@ function getRandArrayElem(array) {
 
 function createGenericSentences() {
     var genericSentences = [];
-    var sent1 = getRandArrayElem(characters) + ' thought that this\'d be a great time for some ' + getRandArrayElem(food) + '!';
+    var sent1 = getRandArrayElem(storyChars) + ' thought that this\'d be a great time for some ' + getRandArrayElem(food) + '!';
     genericSentences.push(sent1);
     var sent2 = getRandArrayElem(characters) + ' took his ' + getRandArrayElem(vehicles) + ' and headed to ' + getRandArrayElem(places) + '.';
     genericSentences.push(sent2);
     return genericSentences;
+}
+
+function createGameSentences(player) {
+    // generic enough to work only with refChar, otherwise we'll have keep track of who all is playing!
+    var gameSentences = [];
+    var sent1 = player + ' passed the ball to ' + getRandArrayElem(storyChars) + ' who slipped past the defenders.';
+    gameSentences.push(sent1);
+    var sent2 = player + ' dribbles past ' + getRandArrayElem(storyChars) + ' and shoots for a ' + getRandArrayElem(points) + 'pointer.';
+    gameSentences.push(sent2);
+    var sent3 = player + ' gets past ' + getRandArrayElem(storyChars) + ' and is now within shooting range!';
+    gameSentences.push(sent3);
 }
 
 function checkWord(line, word) {
@@ -37,6 +48,9 @@ function checkCharacter(line) {
             if (characters[j] == words[i]) {
                 return words[i];
             }
+            if (words[j] == 'he' || words[j] == 'He') {
+                return refChar;
+            }
         }
     }
     // All words checked, no character referenced
@@ -46,27 +60,39 @@ function checkCharacter(line) {
 var readline = require('readline');
 var rl = readline.createInterface({
     input: process.stdin,
-    output: process.stdout,
 });
 
-console.log('It was a beautiful sunny day, ' + getRandArrayElem(characters) + ' thought that this was the perfect time to play some basketball.');
+console.log('It was a beautiful sunny day, ' + protagonist + ' thought that this was the perfect time to head outside.');
 rl.on('line', function(line){
+    var output = null;
     // Local suggestion : Just try to add something relevant
+    // Try to preserve the most likely causal event.
+    // Remove punctuation, like 's and ., these mess with word checking
+    line = line.replace(/[^\w\s]/g, ' ');
     refChar = checkCharacter(line);
-    // {Character} thought that this was the perfect time to play some basketball.
     if (refChar != null) {
-        if (checkWord(line, 'basketball')) {
-            console.log(refChar + ' thought that this was the perfect time to play some basketball.');
+        storyChars.push(refChar);
+    }
+
+    if (refChar != null) {
+        if (checkWord(line, 'yard') || checkWord(line, 'outside')) {
+            output = refChar + ' saw the basketball lying in the yard.';
         } else if (checkWord(line, 'cookies') || checkWord(line, 'milk')) {
-            console.log(refChar + ' realized that the milk makes the cookies especially yummy.');
+            output = refChar + ' realized that the milk makes the cookies especially yummy.';
         } else if (checkWord(line, 'lemonade')) {
-            console.log(refChar + ' felt a sudden surge of energy after drinking the lemonade.');
+            output = refChar + ' felt a sudden surge of energy after drinking the lemonade.';
+        } else if (checkWord(line, 'dribbling') || checkWord('playing')) {
+            gameSentences = createGameSentences(refChar);
+            output = getRandArrayElem(gameSentences);  
+        } else if (checkWord(line, 'passed') || checkWord(line, 'pass') || checkWord(line, 'passes')) {
+            output = 'The pass gets blocked by ' + getRandArrayElem(storyChars);
         }
     }
     // Global suggestion : Goal is to finish a game of basketball, seems really complicated and unlikely to succeed return later
     // Generic Sentences
-    else {
+    if (output == null) {
         genericSentences = createGenericSentences();
-        console.log(getRandArrayElem(genericSentences));
+        output = getRandArrayElem(genericSentences);
     }
-})
+    console.log(output);
+});
