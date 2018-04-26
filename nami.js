@@ -7,15 +7,22 @@ var storyChars = [protagonist];
 var points = ['two', 'three'];
 var refChar = protagonist;
 
+console.log(characters);
+console.log(food);
 function getRandArrayElem(array) {
     return array[Math.floor(Math.random()*array.length)];
 }
 
 function createGenericSentences() {
     var genericSentences = [];
+    var character;
     var sent1 = getRandArrayElem(storyChars) + ' thought that this\'d be a great time for some ' + getRandArrayElem(food) + '!';
     genericSentences.push(sent1);
-    var sent2 = getRandArrayElem(characters) + ' took his ' + getRandArrayElem(vehicles) + ' and headed to ' + getRandArrayElem(places) + '.';
+    // We are already at the protagonist's house, so him heading to his own house makes no sense!
+    do {
+        character = getRandArrayElem(characters);
+    } while(character == protagonist);
+    var sent2 = character + ' took his ' + getRandArrayElem(vehicles) + ' and headed to ' + getRandArrayElem(places) + '.';
     genericSentences.push(sent2);
     return genericSentences;
 }
@@ -29,6 +36,7 @@ function createGameSentences(player) {
     gameSentences.push(sent2);
     var sent3 = player + ' gets past ' + getRandArrayElem(storyChars) + ' and is now within shooting range!';
     gameSentences.push(sent3);
+    return gameSentences;
 }
 
 function checkWord(line, word) {
@@ -62,7 +70,7 @@ var rl = readline.createInterface({
     input: process.stdin,
 });
 
-console.log('It was a beautiful sunny day, ' + protagonist + ' thought that this was the perfect time to head outside.');
+console.log('It was a beautiful sunny day, ' + protagonist + ' thought as he looked outside through the window');
 rl.on('line', function(line){
     var output = null;
     // Local suggestion : Just try to add something relevant
@@ -70,6 +78,7 @@ rl.on('line', function(line){
     // Remove punctuation, like 's and ., these mess with word checking
     line = line.replace(/[^\w\s]/g, ' ');
     refChar = checkCharacter(line);
+    console.log(refChar);
     if (refChar != null) {
         storyChars.push(refChar);
     }
